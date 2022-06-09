@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeLocator", "OfficeLocator\OfficeLocator.csproj", "{344D8C43-FFC9-45E7-B2BD-B95E1883AE1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeLocator.Tests", "OfficeLocator.Tests\OfficeLocator.Tests.csproj", "{1A68CE66-08B2-468E-9662-E3AF3C1DCD9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{344D8C43-FFC9-45E7-B2BD-B95E1883AE1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{344D8C43-FFC9-45E7-B2BD-B95E1883AE1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{344D8C43-FFC9-45E7-B2BD-B95E1883AE1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A68CE66-08B2-468E-9662-E3AF3C1DCD9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A68CE66-08B2-468E-9662-E3AF3C1DCD9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A68CE66-08B2-468E-9662-E3AF3C1DCD9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A68CE66-08B2-468E-9662-E3AF3C1DCD9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
