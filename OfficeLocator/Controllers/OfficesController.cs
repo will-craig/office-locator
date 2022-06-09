@@ -15,24 +15,29 @@ namespace OfficeLocator.Controllers
             _officeService = officeService;
         }
         
+        /// <summary>
+        /// Gets offices closest to the requested latitude and longitude
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
         [HttpGet(Name = "findAll")]
-        public IActionResult GetOffices()
+        public IActionResult GetOffices(double latitude, double longitude)
         {
             var offices = _officeService.GetOffices();
             
             return Ok(offices);
         }
-  
-        [HttpPost(Name = "search")]
-        public IActionResult SearchOffices(OfficeSearchRequest office)
+        
+        /// <summary>
+        /// Saves an office
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost(Name = "saveOffice")]
+        public IActionResult SaveOffice(OfficeRequest request)
         {
-            var allOffices = _officeService.GetOffices();
-            
-            var offices = allOffices.Where(
-                o => o.Latitude == office.Latitude &&
-                     o.Longitude == office.Longitude);
-
-            return Ok(offices);
+            return Ok(request);
         }
     }
 }
