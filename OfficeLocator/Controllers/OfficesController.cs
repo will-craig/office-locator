@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OfficeLocator.DAL;
 using OfficeLocator.Models;
+using OfficeLocator.Services;
 
 namespace OfficeLocator.Controllers
 {
@@ -9,10 +10,12 @@ namespace OfficeLocator.Controllers
     public class OfficesController : ControllerBase
     {
         private readonly IOfficeService _officeService;
-        
-        public OfficesController(IOfficeService officeService)
+        private readonly IGeolocationService _locationService;
+
+        public OfficesController(IOfficeService officeService, IGeolocationService locationService)
         {
             _officeService = officeService;
+            _locationService = locationService;
         }
         
         /// <summary>
@@ -24,9 +27,19 @@ namespace OfficeLocator.Controllers
         [HttpGet(Name = "findAll")]
         public IActionResult GetOffices(double latitude, double longitude)
         {
+            var currentLocation = new Coordinates(latitude, longitude);
             var offices = _officeService.GetOffices();
-            
-            return Ok(offices);
+            var officeList = new Dictionary<string, double>();
+            foreach (var office in offices)
+            {
+                var delta = _locationService.DetermineCoordinateDelta(currentLocation,
+                    new Coordinates(office.Latitude, office.Latitude));
+                officeList.Add(office.Name, delta);
+            }
+
+            var closestOffice = 
+                officeList.First(office => office.Value == officeList.Min(distance => distance.Value));
+            return Ok(offices.First(e => e.Name == closestOffice.Key));
         }
         
         /// <summary>
