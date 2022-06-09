@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OfficeLocator.DAL;
+using OfficeLocator.DAL.Models;
 using OfficeLocator.Models;
 
 namespace OfficeLocator.Controllers
@@ -37,6 +38,23 @@ namespace OfficeLocator.Controllers
         [HttpPost(Name = "saveOffice")]
         public IActionResult SaveOffice(OfficeRequest request)
         {
+            var office = new Office
+            {
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
+                Name = request.Name,
+                Wifi = request.Wifi,
+                ExtendedAccess = request.ExtendedAccess,
+                MeetingRooms = request.MeetingRooms,
+                Kitchen = request.Kitchen,
+                BreakArea = request.BreakArea,
+                PetFriendly = request.PetFriendly,
+                Printing = request.Printing,
+                Shower = request.Shower
+            };
+            
+            _officeService.SaveOffice(office);
+            
             return Ok(request);
         }
     }
