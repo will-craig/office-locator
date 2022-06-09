@@ -11,7 +11,6 @@ namespace OfficeLocator.Controllers
         {
             new OfficeRequest
             {
-                Id = 1,
                 Latitude = 20,
                 Longitude = 20,
                 Name = "London",
@@ -26,7 +25,6 @@ namespace OfficeLocator.Controllers
             },
             new OfficeRequest
             {
-                Id = 2,
                 Latitude = 40,
                 Longitude = 30,
                 Name = "Birmingham",
@@ -46,19 +44,15 @@ namespace OfficeLocator.Controllers
         {
             return Ok(Offices);
         }
-        
-        [HttpGet("{id}", Name = "findById")]
-        public IActionResult GetOfficeById(int id)
+  
+        [HttpPost(Name = "search")]
+        public IActionResult SearchOffices(OfficeSearchRequest office)
         {
-            var office = Offices.SingleOrDefault(o => o.Id == id);
-            
-            return Ok(office);
-        }
+            var offices = Offices.Where(
+                o => o.Latitude == office.Latitude &&
+                     o.Longitude == office.Longitude);
 
-        [HttpPost(Name = "saveOffice")]
-        public IActionResult SaveOffice(OfficeRequest office)
-        {
-            return Ok("Office saved");
+            return Ok(offices);
         }
     }
 }
