@@ -1,5 +1,7 @@
+using System;
 using NUnit.Framework;
 using OfficeLocator.Models;
+using OfficeLocator.Services;
 
 namespace OfficeLocator.Tests;
 
@@ -18,7 +20,8 @@ public class Tests
         var officeLocation = new Coordinates(1, 2);
 
         var distance = geolocationService.DetermineCoordinateDelta(userLocation, officeLocation);
-
-        Assert.Equals(distance, 6.403);
+        var roundedResult = Math.Round(distance, 3);
+        
+        Assert.AreEqual( roundedResult, 6.403);
     }
 }

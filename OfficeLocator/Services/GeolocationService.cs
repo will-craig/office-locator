@@ -1,7 +1,7 @@
 using OfficeLocator.Helper;
 using OfficeLocator.Models;
 
-namespace OfficeLocator;
+namespace OfficeLocator.Services;
 
 public interface IGeolocationService
 {
@@ -10,11 +10,11 @@ public interface IGeolocationService
 
 public class GeolocationService : IGeolocationService
 {
-    public double DetermineCoordinateDelta(Coordinates userLoc, Coordinates officeLoc)
+    public double DetermineCoordinateDelta(Coordinates userLocation, Coordinates officeLocation)
     {
-        double CoordinateDistance(double _userLoc, double _officeLoc)
+        double CoordinateDistance(double userLoc, double officeLoc)
         {
-            var ordered = CalculationHelper.ReturnGreatest(_userLoc, _officeLoc);
+            var ordered = CalculationHelper.ReturnGreatest(userLoc, officeLoc);
             // if one coordinate is negative, use absolute value
             if (ordered.Item1 > 0 && ordered.Item2 < 0)
             {
@@ -24,12 +24,10 @@ public class GeolocationService : IGeolocationService
                 return ordered.Item1 - ordered.Item2;
         }
 
-        var latitudeDelta = CoordinateDistance(userLoc.Latitude, officeLoc.Latitude);
-        var longitudeDelta = CoordinateDistance(userLoc.Longitude, officeLoc.Longitude);
-
-        var delta = Math.Pow(latitudeDelta, 2) + Math.Pow(longitudeDelta, 2);
-        var result = Math.Sqrt(delta);
-        return result;
+        var latitudeDelta = CoordinateDistance(userLocation.Latitude, officeLocation.Latitude);
+        var longitudeDelta = CoordinateDistance(userLocation.Longitude, officeLocation.Longitude);
+        
+        return Math.Sqrt(Math.Pow(latitudeDelta, 2) + Math.Pow(longitudeDelta, 2));
     }
 
 }
