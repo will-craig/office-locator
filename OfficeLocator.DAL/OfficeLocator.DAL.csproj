@@ -6,4 +6,15 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="CsvHelper" Version="27.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="test-offices.csv" />
+      <EmbeddedResource Include="test-offices.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

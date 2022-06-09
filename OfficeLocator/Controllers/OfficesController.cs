@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using OfficeLocator.DAL;
 using OfficeLocator.Models;
 
 namespace OfficeLocator.Controllers
@@ -7,48 +8,27 @@ namespace OfficeLocator.Controllers
     [Route("api/[controller]")]
     public class OfficesController : ControllerBase
     {
-        private static readonly IList<OfficeRequest> Offices = new List<OfficeRequest>()
+        private readonly IOfficeService _officeService;
+        
+        public OfficesController(IOfficeService officeService)
         {
-            new OfficeRequest
-            {
-                Latitude = 20,
-                Longitude = 20,
-                Name = "London",
-                Wifi = true,
-                ExtendedAccess = false,
-                MeetingRooms = false,
-                Kitchen = false,
-                BreakArea = false,
-                PetFriendly = false,
-                Printing = false,
-                Shower = false
-            },
-            new OfficeRequest
-            {
-                Latitude = 40,
-                Longitude = 30,
-                Name = "Birmingham",
-                Wifi = true,
-                ExtendedAccess = false,
-                MeetingRooms = false,
-                Kitchen = false,
-                BreakArea = false,
-                PetFriendly = false,
-                Printing = false,
-                Shower = false
-            }
-        };
+            _officeService = officeService;
+        }
         
         [HttpGet(Name = "findAll")]
         public IActionResult GetOffices()
         {
-            return Ok(Offices);
+            var offices = _officeService.GetOffices();
+            
+            return Ok(offices);
         }
   
         [HttpPost(Name = "search")]
         public IActionResult SearchOffices(OfficeSearchRequest office)
         {
-            var offices = Offices.Where(
+            var allOffices = _officeService.GetOffices();
+            
+            var offices = allOffices.Where(
                 o => o.Latitude == office.Latitude &&
                      o.Longitude == office.Longitude);
 

@@ -1,3 +1,4 @@
+Latitude,Longitude,Name,Wifi,ExtendedAccess,MeetingRooms,Kitchen,BreakArea,PetFriendly,Printing,Shower
 -0.285419,50.828782," ""Adur Estuary""",FALSE,TRUE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE
 -7.743797,54.218553," ""Aghatirourke""",FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE
 -5.116096,55.25298," ""Ailsa Craig""",TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE
