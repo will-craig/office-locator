@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using OfficeLocator.DAL;
 using OfficeLocator.Models;
 
 namespace OfficeLocator.Controllers
@@ -7,52 +8,36 @@ namespace OfficeLocator.Controllers
     [Route("api/[controller]")]
     public class OfficesController : ControllerBase
     {
-        private static readonly IList<OfficeRequest> Offices = new List<OfficeRequest>()
-        {
-            new OfficeRequest
-            {
-                Latitude = 20,
-                Longitude = 20,
-                Name = "London",
-                Wifi = true,
-                ExtendedAccess = false,
-                MeetingRooms = false,
-                Kitchen = false,
-                BreakArea = false,
-                PetFriendly = false,
-                Printing = false,
-                Shower = false
-            },
-            new OfficeRequest
-            {
-                Latitude = 40,
-                Longitude = 30,
-                Name = "Birmingham",
-                Wifi = true,
-                ExtendedAccess = false,
-                MeetingRooms = false,
-                Kitchen = false,
-                BreakArea = false,
-                PetFriendly = false,
-                Printing = false,
-                Shower = false
-            }
-        };
+        private readonly IOfficeService _officeService;
         
-        [HttpGet(Name = "findAll")]
-        public IActionResult GetOffices()
+        public OfficesController(IOfficeService officeService)
         {
-            return Ok(Offices);
+            _officeService = officeService;
         }
-  
-        [HttpPost(Name = "search")]
-        public IActionResult SearchOffices(OfficeSearchRequest office)
+        
+        /// <summary>
+        /// Gets offices closest to the requested latitude and longitude
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
+        [HttpGet(Name = "findAll")]
+        public IActionResult GetOffices(double latitude, double longitude)
         {
-            var offices = Offices.Where(
-                o => o.Latitude == office.Latitude &&
-                     o.Longitude == office.Longitude);
-
+            var offices = _officeService.GetOffices();
+            
             return Ok(offices);
+        }
+        
+        /// <summary>
+        /// Saves an office
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost(Name = "saveOffice")]
+        public IActionResult SaveOffice(OfficeRequest request)
+        {
+            return Ok(request);
         }
     }
 }

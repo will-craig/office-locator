@@ -1,5 +1,5 @@
-using OfficeLocator;
 using OfficeLocator.Services;
+using OfficeLocator.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IGeolocationService, GeolocationService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IOfficeService, OfficeService>();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
