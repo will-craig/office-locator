@@ -20,8 +20,7 @@ public class GeolocationService : IGeolocationService
             {
                 return Math.Abs(ordered.Item1 - ordered.Item2);
             }
-            else
-                return ordered.Item1 - ordered.Item2;
+            return ordered.Item1 - ordered.Item2;
         }
 
         var latitudeDelta = CoordinateDistance(userLocation.Latitude, officeLocation.Latitude);
