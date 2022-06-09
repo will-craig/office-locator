@@ -7,7 +7,7 @@ using OfficeLocator.Services;
 namespace OfficeLocator.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class OfficesController : ControllerBase
     {
         private readonly IOfficeService _officeService;
@@ -33,9 +33,15 @@ namespace OfficeLocator.Controllers
             var officeList = new Dictionary<string, double>();
             foreach (var office in offices)
             {
-                var delta = _locationService.DetermineCoordinateDelta(currentLocation,
-                    new Coordinates(office.Latitude, office.Latitude));
-                officeList.Add(office.Name, delta);
+                var parsedLatitude = double.TryParse(office.Latitude, out double latitudeConverted);
+                var parsedLongitude = double.TryParse(office.Longitude, out double longitudeConverted);
+
+                if (parsedLatitude && parsedLongitude)
+                {
+                    var delta = _locationService.DetermineCoordinateDelta(currentLocation,
+                        new Coordinates(latitudeConverted, longitudeConverted));
+                    officeList.Add(office.Name, delta);
+                }
             }
 
             var closestOffice = 
@@ -46,29 +52,29 @@ namespace OfficeLocator.Controllers
         /// <summary>
         /// Saves an office
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="office"></param>
         /// <returns></returns>
         [HttpPost(Name = "saveOffice")]
-        public IActionResult SaveOffice(OfficeRequest request)
+        public IActionResult SaveOffice([FromForm] OfficeRequest office)
         {
-            var office = new Office
+            var officeToSave = new Office
             {
-                Latitude = request.Latitude,
-                Longitude = request.Longitude,
-                Name = request.Name,
-                Wifi = request.Wifi,
-                ExtendedAccess = request.ExtendedAccess,
-                MeetingRooms = request.MeetingRooms,
-                Kitchen = request.Kitchen,
-                BreakArea = request.BreakArea,
-                PetFriendly = request.PetFriendly,
-                Printing = request.Printing,
-                Shower = request.Shower
+                Latitude = office.Latitude,
+                Longitude = office.Longitude,
+                Name = office.Name,
+                Wifi = office.Wifi,
+                ExtendedAccess = office.ExtendedAccess,
+                MeetingRooms = office.MeetingRooms,
+                Kitchen = office.Kitchen,
+                BreakArea = office.BreakArea,
+                PetFriendly = office.PetFriendly,
+                Printing = office.Printing,
+                Shower = office.Shower
             };
             
-            _officeService.SaveOffice(office);
+            _officeService.SaveOffice(officeToSave);
             
-            return Ok(request);
+            return Ok(office);
         }
     }
 }

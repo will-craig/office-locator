@@ -2,15 +2,15 @@ namespace OfficeLocator.Models;
 
 public class OfficeRequest
 {
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
+    public string Latitude { get; set; }
+    public string Longitude { get; set; }
     public string Name { get; set; }
-    public bool Wifi { get; set; }
-    public bool ExtendedAccess { get; set; }
-    public bool MeetingRooms { get; set; }
-    public bool Kitchen { get; set; }
-    public bool BreakArea { get; set; }
-    public bool PetFriendly { get; set; }
-    public bool Printing { get; set; }
-    public bool Shower { get; set; }
+    public string Wifi { get; set; }
+    public string ExtendedAccess { get; set; }
+    public string MeetingRooms { get; set; }
+    public string Kitchen { get; set; }
+    public string BreakArea { get; set; }
+    public string PetFriendly { get; set; }
+    public string Printing { get; set; }
+    public string Shower { get; set; }
 }
