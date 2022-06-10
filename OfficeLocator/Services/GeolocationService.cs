@@ -14,13 +14,13 @@ public class GeolocationService : IGeolocationService
     {
         double CoordinateDistance(double userLoc, double officeLoc)
         {
-            var ordered = CalculationHelper.ReturnGreatest(userLoc, officeLoc);
+            var (greater, lower) = CalculationHelper.ReturnGreatestThenLowest(userLoc, officeLoc);
             // if one coordinate is negative, use absolute value
-            if (ordered.Item1 > 0 && ordered.Item2 < 0)
+            if (greater > 0 && lower < 0)
             {
-                return Math.Abs(ordered.Item1 - ordered.Item2);
+                return Math.Abs(greater - lower);
             }
-            return ordered.Item1 - ordered.Item2;
+            return greater - lower;
         }
 
         var latitudeDelta = CoordinateDistance(userLocation.Latitude, officeLocation.Latitude);
@@ -28,5 +28,4 @@ public class GeolocationService : IGeolocationService
         
         return Math.Sqrt(Math.Pow(latitudeDelta, 2) + Math.Pow(longitudeDelta, 2));
     }
-
 }

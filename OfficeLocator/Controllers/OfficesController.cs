@@ -12,11 +12,13 @@ namespace OfficeLocator.Controllers
     {
         private readonly IOfficeService _officeService;
         private readonly IGeolocationService _locationService;
+        private readonly IFacilityPreferenceService _facilityService;
 
-        public OfficesController(IOfficeService officeService, IGeolocationService locationService)
+        public OfficesController(IOfficeService officeService, IGeolocationService locationService, IFacilityPreferenceService facilityService)
         {
             _officeService = officeService;
             _locationService = locationService;
+            _facilityService = facilityService;
         }
         
         /// <summary>
@@ -49,6 +51,55 @@ namespace OfficeLocator.Controllers
             return Ok(offices.First(e => e.Name == closestOffice.Key));
         }
         
+        /// <summary>
+        /// Gets top 10 offices closest to the requested latitude and longitude, and returns them ordered by facility preference
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
+        [HttpPost("/facilities", Name = "retrieveOfficesWithFacilities")]
+        public IActionResult GetOfficeWithRequestedFacilities(OfficeRequest officeRequest)
+        {
+            var validLat = double.TryParse(officeRequest.Latitude, out double requestLatitude);
+            var validLong = double.TryParse(officeRequest.Longitude, out double requestLongitude);
+            if (validLat == false && validLong == false) 
+                return BadRequest();
+            
+            var currentLocation = new Coordinates(requestLatitude, requestLongitude);
+            var offices = _officeService.GetOffices();
+            var closestOfficeList = GetOfficeDistances(offices, currentLocation).OrderBy(e => e.Value).Take(10).ToList();
+            var orderedPreferenceList = GetOfficesByFacilityPreference(officeRequest, closestOfficeList, offices).ToList();
+            return Ok(orderedPreferenceList);
+        }
+
+        private IEnumerable<WeightedOffice> GetOfficeDistances(IList<Office> offices, Coordinates currentLocation)
+        {
+            foreach (var office in offices)
+            {
+                var validLat1 = double.TryParse(office.Latitude, out double convertedLatitude);
+                var validLong1 = double.TryParse(office.Longitude, out double convertedLongitude);
+                if (!validLat1 || !validLong1) continue;
+                var delta = _locationService.DetermineCoordinateDelta(currentLocation, new Coordinates(convertedLatitude, convertedLongitude));
+                yield return new WeightedOffice(office.Name, delta);
+            }
+        }
+
+        private IEnumerable<Office> GetOfficesByFacilityPreference(OfficeRequest officeRequest,
+            List<WeightedOffice> closestOfficeList, IList<Office> offices)
+        {
+            var preferredOfficeList =
+                (from closeOffice in closestOfficeList
+                    select offices.First(e => e.Name == closeOffice.Name)
+                    into selectedOffice
+                    let count = _facilityService.PreferenceCount(officeRequest, selectedOffice)
+                    select new WeightedOffice(selectedOffice.Name, count)).ToList();
+
+            foreach (var preferredOffice in preferredOfficeList.OrderByDescending(e => e.Value))
+            {
+                yield return offices.First(e => e.Name == preferredOffice.Name);
+            }
+        }
+
         /// <summary>
         /// Saves an office
         /// </summary>
